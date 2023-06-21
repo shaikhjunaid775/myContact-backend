@@ -5,10 +5,9 @@ const Contact = require("../models/contactModels");
 //@route GET /api/contacts
 //@access public
 
-
 const getContacts = asyncHandler(async(req,res)=>{
-    const contacts = await Contact.find();
-    res.json(contacts);
+    const contact = await Contact.find();
+    res.status(200).json(contact);
 });
 
 
@@ -23,13 +22,13 @@ const createContact = asyncHandler(async(req,res)=>{
         res.status(400);
         throw new Error("All fields are required !");
     }
-    const contacts = await Contact.create({
-        name,
-        email,
-        phone
-    })
 
-    res.json(contacts);
+    const contact = await Contact.create({
+        name : name,
+        email : email,
+        phone : phone
+    })
+    res.json(contact);
 });
 
 //@desc get contact
@@ -39,10 +38,11 @@ const createContact = asyncHandler(async(req,res)=>{
 const getContact = asyncHandler(async(req,res)=>{
     const contact = await Contact.findById(req.params.id);
     if(!contact){
-        res.status(404) ;
-        throw new Error("cintact not found!");
+        res.status(404);
+        throw new Error("Contact not found !")
     }
-    res.json(contact);
+
+    res.status(200).json(contact)
 });
 
 //@desc update contacts
@@ -52,17 +52,15 @@ const getContact = asyncHandler(async(req,res)=>{
 const updateContact = asyncHandler(async(req,res)=>{
     const contact = await Contact.findById(req.params.id);
     if(!contact){
-        res.status(404) ;
-        throw new Error("cintact not found!");
+        res.status(404);
+        throw new Error("Contact not found !");
     }
-
     const updatedContact = await Contact.findByIdAndUpdate(
         req.params.id,
         req.body,
-        {new : true}
-    );
-
-    res.json(updateContact);
+        {new: true}
+        );
+    res.status(200).json(updatedContact);
 });
 
 //@desc delete contacts
